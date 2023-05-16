@@ -13,6 +13,12 @@ pipeline {
         stage('Github Checkout') {
             steps {
                 git branch: 'main', credentialsId: 'github', url: 'https://github.com/shivgarg05/spemajor'
+                sh 'git checkout main -- config'
+                sh 'chmod 600 config'
+                
+                script {
+                    env.KUBECONFIG_PATH = "${env.WORKSPACE}/config"
+                }
             }
         }
 
@@ -32,6 +38,14 @@ pipeline {
                 sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                 sh 'docker push shivyanshgarg05/backend'
                 sh 'docker push shivyanshgarg05/frontend'
+            }
+        }
+        stage('Grant Permissions') {
+            steps {
+                sh "chmod 600 ${env.KUBECONFIG_PATH}"
+                sh 'chmod 600 /home/shivyansh/.minikube/profiles/minikube/client.crt'
+                sh 'chmod 600 /home/shivyansh/.minikube/profiles/minikube/client.key'
+                sh 'chmod 600 /home/shivyansh/.minikube/ca.crt'
             }
         }
 
