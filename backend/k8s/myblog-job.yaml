@@ -1,0 +1,92 @@
+###########################
+# Job
+###########################
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: django-job-container
+        image: shivyanshgarg05/backend
+        command: ["bash", "-c", "/usr/src/app/entrypoint.sh"]
+        env:
+          - name: DJANGO_ENV
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DJANGO_ENV
+          - name: SECRET_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: SECRET_KEY
+          - name: DEBUG
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DEBUG
+          - name: DJANGO_ALLOWED_HOSTS
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DJANGO_ALLOWED_HOSTS
+          - name: DB_ENGINE
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DB_ENGINE
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DB_DATABASE
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: blog-secrets
+                key: DB_PASSWORD
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DB_HOST 
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DB_PORT
+          - name: DJANGO_ADMIN_USER
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DJANGO_ADMIN_USER
+          - name: DJANGO_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: blog-secrets
+                key: DJANGO_ADMIN_PASSWORD
+          - name: DJANGO_ADMIN_FIRST_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DJANGO_ADMIN_FIRST_NAME 
+          - name: DJANGO_ADMIN_EMAIL
+            valueFrom:
+              configMapKeyRef:
+                name: blog-config
+                key: DJANGO_ADMIN_EMAIL 
+          # - name: DJANGO_SETTINGS_MODULE
+          #   valueFrom:
+          #     configMapKeyRef:
+          #       name: app-config
+          #       key: DJANGO_SETTINGS_MODULE                
+      restartPolicy: Never
+  backoffLimit: 5

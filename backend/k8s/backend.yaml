@@ -1,0 +1,94 @@
+###########################
+# Deployment
+###########################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myblog-django
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: django
+  template:
+    metadata:
+      labels:
+        component: django
+    spec:
+      # initContainers:
+      #     - name: install-mysqlclient
+      #       image: python:3
+      #       command: ["apt-get", "update"]
+      #       # volumeMounts:
+      #       #   - name: blog-code
+      #       #     mountPath: /code
+      #       securityContext:
+      #         privileged: true
+      containers:
+        - name: django-container
+          image: shivyanshgarg05/backend
+          ports:
+            - containerPort: 8000
+          command: ["bash", "-c", "python manage.py runserver 0.0.0.0:8000"]
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: SECRET_KEY
+            - name: DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: DEBUG
+            - name: DJANGO_ALLOWED_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: DJANGO_ALLOWED_HOSTS
+            - name: DB_ENGINE
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: DB_ENGINE
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: DB_DATABASE
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blog-secrets
+                  key: DB_PASSWORD
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: DB_HOST 
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-config
+                  key: DB_PORT                    
+
+---
+###########################
+# Cluster IP Service
+###########################
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-service
+spec:
+  type: ClusterIP
+  selector:
+    component: django
+  ports:
+    - port: 8000
+      targetPort: 8000

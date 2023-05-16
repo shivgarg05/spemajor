@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blog-config
+data:
+  #env variables for the mysql component
+  MYSQL_USER: root
+  MYSQL_DB: myblog
+
+  #env variables for the backend component
+  DEBUG: "1"
+  SECRET_KEY: secret
+  DJANGO_ALLOWED_HOSTS: "*"
+  DJANGO_ADMIN_USER: admin
+  DJANGO_ADMIN_EMAIL: "shivyanshgarg05@gmail.com"
+  DJANGO_ADMIN_FIRST_NAME: admin
+  DJANGO_ENV: "development"
+
+  DATABASE: mysql
+  DB_ENGINE: "django.db.backends.mysql"
+  DB_DATABASE: myblog
+  DB_USER: root
+  DB_HOST: mysqldb-service
+  DB_PORT: "3306"
