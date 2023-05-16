@@ -20,8 +20,8 @@ pipeline {
         stage('Build Images') {
             steps {
               
-                bat 'docker build -t shivyanshgarg05/backend ./backend'
-                bat 'docker build -t shivyanshgarg05/frontend ./frontend'
+                sh 'docker build -t shivyanshgarg05/backend ./backend'
+                sh 'docker build -t shivyanshgarg05/frontend ./frontend'
 
              
             }
@@ -32,9 +32,9 @@ pipeline {
                 // withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                 // bat 'echo %DOCKER_USERNAME%'
                 // bat 'echo %DOCKER_PASSWORD%'
-                bat 'docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%'
-                bat 'docker push  shivyanshgarg05/backend'
-                bat 'docker push shivyanshgarg05/frontend'
+                sh 'docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%'
+                sh 'docker push  shivyanshgarg05/backend'
+                sh 'docker push shivyanshgarg05/frontend'
               
             }
         }
