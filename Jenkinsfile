@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_USERNAME = 'shivyanshgarg05'
-        DOCKER_PASSWORD = 'CHALSi@1234'
+        DOCKER_PASSWORD = 'SPE@123456'
         registryCredential = 'dockerhub'
         registry_backend = 'shivyanshgarg05/backend'
         registry_frontend = 'shivyanshgarg05/frontend'
